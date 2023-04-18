@@ -1,0 +1,67 @@
+<!doctype html>
+<html ng-app="myApp">
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  </head>
+  <body ng-controller="MyController">
+    <h2>Permissões</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Usuários</th>
+                <th ng-repeat="tarefa in tarefas">{{tarefa.nome}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="usuario in usuarios">
+                <td>{{usuario.nome}}</td>
+                <td ng-repeat="tarefa in tarefas"><button ng-click="alternar(usuario, tarefa)">{{usuario.tarefas.includes(tarefa)?"SIM":"NÃO"}}</button></td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td>
+                    <input type="text" ng-model="novoUsuario">
+                </td>
+                <td><button ng-click="adicionarUsuario()">salvar</button></td>
+            </tr>
+        </tfoot>
+    </table>
+    <script>
+        angular.module('myApp', []).controller('MyController', function($scope) {
+            $scope.usuarios = [
+                {id: 1, nome: "João", tarefas: []},
+                {id: 2, nome: "Maria", tarefas: []},
+                {id: 3, nome: "Pedro", tarefas: []},
+            ];
+
+            $scope.tarefas = [
+                {id: 1, nome: "Abrir porta"},
+                {id: 2, nome: "Fechar porta"},
+                {id: 3, nome: "Abrir janela"},
+            ]
+
+            $scope.adicionarUsuario = function() {
+                const novoId = $scope.usuarios.length + 1;
+                const novoNome = $scope.novoUsuario;
+                $scope.usuarios.push({id: novoId, nome: novoNome, tarefas: [] });
+                $scope.novoUsuario = ""
+            }
+
+            $scope.alternar = function(usuario, tarefa) {
+                console.log(usuario)
+                console.log(tarefa)
+                const usuarioJaPossuiTarefa = usuario.tarefas.includes(tarefa)
+                console.log(usuarioJaPossuiTarefa)
+                if (usuarioJaPossuiTarefa) {
+                    // remover a tarefa no usuário
+                    usuario.tarefas = usuario.tarefas.filter(t => t.id != tarefa.id)
+                } else {
+                    // adicionar a tarefa no usuário
+                    usuario.tarefas.push(tarefa)
+                }
+            }
+        });
+    </script>
+  </body>
+</html>
